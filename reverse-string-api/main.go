@@ -18,10 +18,13 @@ type ReverseResponse struct {
 
 func reverseString(s string) string {
 	runes := []rune(s)
+	fmt.Printf("Received input: %s\n", string(s))
 	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
 		runes[i], runes[j] = runes[j], runes[i]
 
 	}
+	fmt.Printf("Output: %s\n", string(runes))
+
 	return string(runes)
 }
 

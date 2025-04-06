@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>String Reverser</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+      }
+      .input-group {
+        margin-bottom: 15px;
+      }
+      input[type="text"] {
+        padding: 8px;
+        width: 70%;
+        font-size: 16px;
+      }
+      button {
+        padding: 8px 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #result {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>String Reverser</h1>
+    <div class="input-group">
+      <input
+        type="text"
+        id="inputString"
+        placeholder="Enter a string to reverse"
+      />
+      <button id="submitBtn">Reverse</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const inputField = document.getElementById("inputString");
+        const submitBtn = document.getElementById("submitBtn");
+        const resultDiv = document.getElementById("result");
+
+        submitBtn.addEventListener("click", function () {
+          const inputString = inputField.value.trim();
+
+          if (!inputString) {
+            alert("Please enter a string to reverse");
+            return;
+          }
+
+          // Create request payload
+          const payload = {
+            input: inputString,
+          };
+
+          // Send POST request to API
+          fetch("http://localhost:5050/api/reverse", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              // Display result
+              resultDiv.innerHTML = `
+                        <p><strong>Original:</strong> ${data.original}</p>
+                        <p><strong>Reversed:</strong> ${data.reversed}</p>
+                    `;
+              resultDiv.style.display = "block";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Error: " + error.message);
+            });
+        });
+
+        // Add enter key support
+        inputField.addEventListener("keypress", function (event) {
+          if (event.key === "Enter") {
+            submitBtn.click();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
